@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Despesa com Eventos Culturais - Portal da Transparência MG</title>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================================
+           1. VARIÁVEIS DE CORES (mesmas do portal)
+        ============================================================ */
+        :root {
+            --primary-dark:      #1a3a5c;
+            --primary-darker:    #0f2a44;
+            --header-blue:       #20445d;
+            --accent-red:        #b93c42;
+            --background-light:  #f5f7fa;
+            --border-color:      #dee2e6;
+        }
+
+        /* ============================================================
+           2. BASE
+        ============================================================ */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; overflow-x: hidden; }
+        body {
+            font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-light);
+            padding-bottom: 15px;
+            color: #1e293b;
+        }
+        .material-icons { font-family: 'Material Icons' !important; font-size: 14px; vertical-align: middle; }
+        .dashboard-container { width: 100%; max-width: 88%; padding: 0 40px; margin: 0; }
+
+        /* ============================================================
+           3. DATA DE ATUALIZAÇÃO
+        ============================================================ */
+        .data-atualizacao-box {
+            display: flex; align-items: center; gap: 8px;
+            margin: 15px 0; padding: 8px 15px;
+            font-size: 12px; font-weight: 600; color: var(--primary-dark);
+        }
+        .data-atualizacao-box .material-icons { color: var(--accent-red); }
+
+        /* ============================================================
+           4. CABEÇALHO DA CONSULTA
+        ============================================================ */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-darker) 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 18px 22px;
+            margin-bottom: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+        .page-header h1 { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .page-header h1 .material-icons { font-size: 22px; }
+        .page-header p { font-size: 12px; opacity: 0.85; margin-top: 4px; }
+        .table-badge {
+            background: rgba(255,255,255,0.14); color: white;
+            padding: 5px 12px; border-radius: 12px;
+            font-size: 12px; font-weight: 600; white-space: nowrap;
+        }
+
+        /* ============================================================
+           5. CARDS DE MÉTRICAS
+        ============================================================ */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .metric-card {
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e5e9ef;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+            overflow: hidden;
+            transition: box-shadow 0.25s ease, transform 0.25s ease;
+        }
+        .metric-card:hover { box-shadow: 0 8px 24px rgba(26,58,92,0.13); transform: translateY(-2px); }
+        .metric-header {
+            background: var(--header-blue); color: white;
+            font-size: 13px; font-weight: 600;
+            padding: 10px 15px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .metric-header .material-icons { font-size: 16px; opacity: 0.85; }
+        .metric-body { padding: 12px 15px; }
+        .metric-value { font-size: 20px; font-weight: 700; color: #171c21; }
+        .metric-value.small { font-size: 15px; }
+        .metric-sublabel { font-size: 10px; color: #94a3b8; font-weight: 500; margin-top: 2px; }
+        .progress-mini { height: 6px; background: #e9eef3; border-radius: 3px; margin-top: 8px; overflow: hidden; }
+        .progress-mini div { height: 100%; width: 24%; background: var(--accent-red); border-radius: 3px; }
+
+        /* ============================================================
+           6. BLOCO DA CONTRATAÇÃO
+        ============================================================ */
+        .section-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: var(--header-blue); color: white;
+            padding: 12px 16px;
+            font-size: 14px; font-weight: 600;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .section-body { padding: 18px 20px; }
+
+        .info-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 13px; }
+        .info-card {
+            background: #f8fafd;
+            border-radius: 10px;
+            padding: 13px 16px;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid var(--accent-red);
+        }
+        .info-card.primary { border-left-color: var(--primary-dark); }
+        .info-label { font-size: 10px; text-transform: uppercase; color: #64748b; font-weight: 600; margin-bottom: 4px; }
+        .info-value { font-size: 13px; font-weight: 500; color: #1e293b; word-break: break-word; }
+        .info-value strong { font-size: 15px; font-weight: 700; color: var(--primary-dark); }
+
+        .botoes-acesso { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-pesquisa {
+            background: var(--header-blue);
+            border: none; padding: 0 16px;
+            font-weight: 600; font-size: 13px;
+            border-radius: 6px; color: white;
+            display: inline-flex; align-items: center; gap: 6px;
+            height: 36px; white-space: nowrap;
+            text-decoration: none; cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-pesquisa:hover { background: linear-gradient(to right, var(--accent-red), #a32c32); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(185,60,66,0.2); color: white; }
+        .btn-secondary-custom {
+            background: white;
+            border: 2px solid var(--primary-darker);
+            color: var(--primary-darker);
+            padding: 0 16px;
+            font-weight: 600; font-size: 13px;
+            border-radius: 6px;
+            display: inline-flex; align-items: center; gap: 6px;
+            height: 36px; white-space: nowrap;
+            text-decoration: none; cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary-custom:hover { background-color: #132837; color: white; border-color: #132837; }
+        .btn-pesquisa:focus-visible, .btn-secondary-custom:focus-visible { outline: 3px solid var(--accent-red); outline-offset: 2px; }
+
+        /* ============================================================
+           7. TABELA DOS INCISOS
+        ============================================================ */
+        .table-scroll { overflow-x: auto; }
+        .table { width: 100%; font-size: 12px; border-collapse: collapse; min-width: 640px; }
+        .table th, .table td { border: 1px solid #d6dee6; }
+        .table thead th {
+            background-color: #54697b; color: white;
+            font-weight: 600; font-size: 12px;
+            padding: 12px 10px;
+            text-transform: uppercase; text-align: left;
+        }
+        .table tbody tr { background-color: #ffffff; }
+        .table tbody tr:hover { background-color: rgba(41,67,90,0.04); }
+        .table tbody td { padding: 10px; vertical-align: top; line-height: 1.5; color: #334155; }
+        .col-inciso { width: 60px; text-align: center !important; font-weight: 700; color: var(--primary-dark) !important; }
+        .col-exigencia { width: 26%; font-weight: 600; color: #1e293b !important; }
+        .col-onde { width: 150px; }
+
+        .badge-status { padding: 3px 8px; border-radius: 20px; font-size: 10.5px; font-weight: 700; display: inline-block; letter-spacing: 0.2px; white-space: nowrap; }
+        .badge-formulario   { background: #d1ecf1; color: #0c5460; border: 1px solid #b0dde5; }
+        .badge-documentacao { background: #cce5ff; color: #004085; border: 1px solid #b8d4f5; }
+        .badge-pagina       { background: #dcf5e7; color: #0f6b3a; border: 1px solid #b2e6c8; }
+        .badge-na           { background: #e9ecef; color: #495057; border: 1px solid #ced4da; }
+
+        .legenda { font-size: 11px; color: #64748b; margin-top: 10px; }
+
+        /* ============================================================
+           8. RESPONSIVIDADE
+        ============================================================ */
+        @media (max-width: 992px) {
+            .dashboard-container { padding: 0 15px; max-width: 100%; }
+            .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .dashboard-container { padding: 0 8px; }
+            .info-grid { grid-template-columns: 1fr; }
+            .metric-value { font-size: 16px; }
+            .botoes-acesso { flex-direction: column; }
+            .btn-pesquisa, .btn-secondary-custom { width: 100%; justify-content: center; }
+            .section-body { padding: 14px; }
+            .table thead th, .table tbody td { padding: 6px 5px; font-size: 11px; }
+        }
+        @media (max-width: 480px) {
+            .metrics-grid { grid-template-columns: 1fr; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .metric-card, .btn-pesquisa, .btn-secondary-custom { transition: none; }
+            .metric-card:hover, .btn-pesquisa:hover { transform: none; }
+        }
+    </style>
+</head>
+<body class="iframe-mode">
+
+<div class="main-container">
+    <div class="dashboard-container">
+
+        <!-- Data de atualização: altere sempre que atualizar a página -->
+        <div class="data-atualizacao-box">
+            <i class="material-icons">event</i>
+            Atualizado em: <span style="margin-left:4px;">28/10/2026</span>
+        </div>
+
+        <!-- Cabeçalho -->
+        <div class="page-header">
+            <div>
+                <h1><i class="material-icons">theater_comedy</i>Despesa com Eventos Culturais</h1>
+                <p>Contratações de artistas e grupos artísticos, conforme a Lei Estadual nº 26.040/2026</p>
+            </div>
+            <span class="table-badge">1 contratação</span>
+        </div>
+
+        <!-- Cards de métricas -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-header">Patrocínio concedido <i class="material-icons">account_balance</i></div>
+                <div class="metric-body">
+                    <div class="metric-value">R$ 250.000,00</div>
+                    <div class="metric-sublabel">Valor total do patrocínio CODEMGE</div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-header">Contratações artísticas <i class="material-icons">mic</i></div>
+                <div class="metric-body">
+                    <div class="metric-value">R$ 60.000,00</div>
+                    <div class="progress-mini" role="img" aria-label="24% do patrocínio"><div></div></div>
+                    <div class="metric-sublabel">24% do valor do patrocínio</div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-header">Instrumento jurídico <i class="material-icons">gavel</i></div>
+                <div class="metric-body">
+                    <div class="metric-value small">Contrato nº 12.103</div>
+                    <div class="metric-sublabel">Contrato de Patrocínio</div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-header">Fonte dos recursos <i class="material-icons">payments</i></div>
+                <div class="metric-body">
+                    <div class="metric-value small">Patrocínio CODEMGE</div>
+                    <div class="metric-sublabel">Recursos de patrocínio</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+             BLOCO DE UMA CONTRATAÇÃO
+             Para incluir outra contratação, copie desde aqui até
+             "FIM DO BLOCO", cole logo abaixo e altere os dados.
+             ============================================================ -->
+        <div class="section-card">
+            <div class="section-header">
+                <i class="material-icons">handshake</i> Contrato de Patrocínio nº 12.103
+            </div>
+            <div class="section-body">
+
+                <div class="info-grid">
+                    <div class="info-card primary">
+                        <div class="info-label">Entidade patrocinada e responsável pela execução do projeto</div>
+                        <div class="info-value">
+                            <strong>Instituto Antônio Ernesto de Salvo – INAES</strong><br>
+                            CNPJ 09.381.295/0001-68
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">Valor das contratações artísticas</div>
+                        <div class="info-value"><strong style="color:var(--accent-red)">R$ 60.000,00</strong><br>de R$ 250.000,00 patrocinados</div>
+                    </div>
+                </div>
+
+                <div class="botoes-acesso">
+                    <!-- SUBSTITUA href="#" pelo link da documentação -->
+                    <a class="btn-pesquisa" href="#" target="_blank" rel="noopener">
+                        <i class="material-icons">folder_open</i> Acessar documentação
+                    </a>
+                    <!-- SUBSTITUA href="#" pelo link do formulário -->
+                    <a class="btn-secondary-custom" href="#" target="_blank" rel="noopener">
+                        <i class="material-icons">description</i> Abrir formulário
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-header">
+                <i class="material-icons">checklist</i> Informações exigidas pela Lei Estadual nº 26.040/2026
+            </div>
+            <div class="section-body">
+                <div class="table-scroll">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="col-inciso" style="color:white !important">Inciso</th>
+                                <th>Exigência</th>
+                                <th>Informação</th>
+                                <th>Onde consultar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="col-inciso">I</td>
+                                <td class="col-exigencia">Artista ou grupo artístico contratado</td>
+                                <td>Instituto Antônio Ernesto de Salvo – INAES, CNPJ nº 09.381.295/0001-68, na condição de entidade patrocinada e responsável pela execução do projeto. Os artistas e grupos artísticos contratados constam do formulário.</td>
+                                <td class="col-onde"><span class="badge-status badge-formulario">Formulário</span></td>
+                            </tr>
+                            <tr>
+                                <td class="col-inciso">II</td>
+                                <td class="col-exigencia">Valor total da contratação</td>
+                                <td>Patrocínio concedido pela CODEMGE: R$ 250.000,00 (duzentos e cinquenta mil reais).<br>Destinado às contratações artísticas: R$ 60.000,00 (sessenta mil reais).</td>
+                                <td class="col-onde"><span class="badge-status badge-pagina">Nesta página</span></td>
+                            </tr>
+                            <tr>
+                                <td class="col-inciso">III</td>
+                                <td class="col-exigencia">Fonte dos recursos utilizados</td>
+                                <td>Recursos provenientes de patrocínio concedido pela CODEMGE.</td>
+                                <td class="col-onde"><span class="badge-status badge-pagina">Nesta página</span></td>
+                            </tr>
+                            <tr>
+                                <td class="col-inciso">IV</td>
+                                <td class="col-exigencia">Instrumento jurídico da contratação</td>
+                                <td>Contrato de Patrocínio nº 12.103.</td>
+                                <td class="col-onde"><span class="badge-status badge-documentacao">Documentação</span></td>
+                            </tr>
+                            <tr>
+                                <td class="col-inciso">V</td>
+                                <td class="col-exigencia">Nota de empenho</td>
+                                <td>Não se aplica.</td>
+                                <td class="col-onde"><span class="badge-status badge-na">Não se aplica</span></td>
+                            </tr>
+                            <tr>
+                                <td class="col-inciso">VI</td>
+                                <td class="col-exigencia">Justificativa de preço</td>
+                                <td>As justificativas de preço e os documentos comprobatórios, incluindo pesquisas de mercado, constam do formulário.</td>
+                                <td class="col-onde"><span class="badge-status badge-formulario">Formulário</span></td>
+                            </tr>
+                            <tr>
+                                <td class="col-inciso">VII</td>
+                                <td class="col-exigencia">Regularidade fiscal e previdenciária</td>
+                                <td>Documentação comprobatória disponível no link de acesso.</td>
+                                <td class="col-onde"><span class="badge-status badge-documentacao">Documentação</span></td>
+                            </tr>
+                            <tr>
+                                <td class="col-inciso">VIII</td>
+                                <td class="col-exigencia">Ato de dispensa ou inexigibilidade de licitação</td>
+                                <td>Não se aplica.</td>
+                                <td class="col-onde"><span class="badge-status badge-na">Não se aplica</span></td>
+                            </tr>
+                            <tr>
+                                <td class="col-inciso">IX</td>
+                                <td class="col-exigencia">Planilha sintética dos itens do valor total</td>
+                                <td>A composição dos custos das contratações artísticas está detalhada no formulário.</td>
+                                <td class="col-onde"><span class="badge-status badge-formulario">Formulário</span></td>
+                            </tr>
+                            <tr>
+                                <td class="col-inciso">X</td>
+                                <td class="col-exigencia">Contrapartida cultural ou social</td>
+                                <td>As contrapartidas previstas para o projeto estão descritas no Plano de Trabalho.</td>
+                                <td class="col-onde"><span class="badge-status badge-documentacao">Documentação</span></td>
+                            </tr>
+                            <tr>
+                                <td class="col-inciso">XI</td>
+                                <td class="col-exigencia">Participação de artistas, grupos e manifestações culturais locais, regionais ou sediados no Estado (art. 5º, caput)</td>
+                                <td>As informações correspondentes estão detalhadas no formulário.</td>
+                                <td class="col-onde"><span class="badge-status badge-formulario">Formulário</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="legenda">
+                    <strong>Documentação</strong> e <strong>Formulário</strong> correspondem aos botões de acesso do bloco acima.
+                </p>
+            </div>
+        </div>
+        <!-- ===================== FIM DO BLOCO ===================== -->
+
+    </div>
+</div>
+
+</body>
+</html>
