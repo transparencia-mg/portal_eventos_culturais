@@ -161,6 +161,7 @@
             border-left: 4px solid var(--primary-dark);
         }
         .info-card.destaque { border-left-color: var(--accent-red); }
+        .info-card.orgao-card { margin-bottom: 13px; background: #eef3f8; }
         .info-label { font-size: 10px; text-transform: uppercase; color: #64748b; font-weight: 600; margin-bottom: 6px; }
         .info-label b { color: var(--primary-dark); }
         .info-value { font-size: 13px; font-weight: 500; color: #1e293b; line-height: 1.5; word-break: break-word; }
@@ -206,6 +207,7 @@
         .btn-export:focus-visible { outline: 3px solid var(--accent-red); outline-offset: 2px; }
         .badge-status { padding: 3px 8px; border-radius: 20px; font-size: 10.5px; font-weight: 700; display: inline-block; white-space: nowrap; }
         .badge-na { background: #e9ecef; color: #495057; border: 1px solid #ced4da; }
+        .badge-pendente { background: #fff3cd; color: #856404; border: 1px solid #ffe082; }
 
         .vazio {
             background: white; border-radius: 10px; padding: 30px; text-align: center;
@@ -248,17 +250,12 @@
             Atualizado em: <span id="data-atualizacao" style="margin-left:4px;"></span>
         </div>
 
-        <div class="page-header">
-            <h1><i class="material-icons">theater_comedy</i>Despesa com Eventos Culturais</h1>
-            <p>Contratações de artistas e grupos artísticos, conforme a Lei Estadual nº 26.040/2026</p>
-        </div>
-
         <div class="metrics-grid" id="metricas"></div>
 
         <div class="filter-container">
             <div class="filter-group">
                 <label class="filter-label" for="busca">Pesquisar contratação</label>
-                <input id="busca" class="modern-select" type="search" placeholder="Entidade, CNPJ, nº do instrumento ou documento">
+                <input id="busca" class="modern-select" type="search" placeholder="Órgão, entidade, CNPJ, nº do instrumento ou documento">
             </div>
             <span class="contador" id="contador"></span>
         </div>
@@ -289,6 +286,7 @@ const ATUALIZADO_EM = "28/10/2026";
 
 const CONTRATACOES = [
     {
+        orgao:              "CODEMGE – Companhia de Desenvolvimento de Minas Gerais",
         instrumento:        "Contrato de Patrocínio nº 12.103",
         entidade:           "Instituto Antônio Ernesto de Salvo – INAES",
         cnpj:               "09.381.295/0001-68",
@@ -325,12 +323,9 @@ const CONTRATACOES = [
               link: "#" }                 // SUBSTITUA
         ],
         outrosDocumentos: [
-            { titulo: "Formulário das contratações artísticas",
-              descricao: "Relação de artistas, composição de custos e justificativas de preço.",
-              link: "#" },                // SUBSTITUA
-            { titulo: "Plano de Trabalho",
-              descricao: "Plano de Trabalho do projeto, com as contrapartidas previstas.",
-              link: "#" }                 // SUBSTITUA
+            { titulo: "Extrato da Publicação",
+              descricao: "Extrato da Publicação",
+              link: "https://nuvem.cge.mg.gov.br/index.php/s/tB8kT2ngcjA6xkj" }
         ]
     }
     /* , { ...próxima contratação... } */
@@ -363,8 +358,11 @@ function renderMetricas() {
         </div>`).join("");
 }
 
+const linkValido = l => typeof l === "string" && /^https?:\/\//i.test(l.trim());
+
 function botaoDoc(link) {
-    if (!link) return `<span class="badge-status badge-na">Não se aplica</span>`;
+    if (link === null) return `<span class="badge-status badge-na">Não se aplica</span>`;
+    if (!linkValido(link)) return `<span class="badge-status badge-pendente">Link pendente</span>`;
     return `<a class="btn-export" href="${esc(link)}" target="_blank" rel="noopener"><i class="material-icons">open_in_new</i> Acessar</a>`;
 }
 
@@ -407,14 +405,19 @@ function renderContrato(c, aberto) {
         <summary>
             <i class="material-icons seta">chevron_right</i>
             <div class="resumo-titulo">
-                <strong>${esc(c.entidade)}</strong>
-                <span>${esc(c.instrumento)} · CNPJ ${esc(c.cnpj)}</span>
+                <strong>${esc(c.orgao)}</strong>
+                <span>${esc(c.instrumento)} · ${esc(c.entidade)}</span>
             </div>
             <div class="resumo-valor">${moeda(c.valorArtistico)}<small>contratações artísticas</small></div>
         </summary>
 
         <div class="contrato-body">
             <div class="bloco-titulo"><i class="material-icons">info</i> Dados da contratação</div>
+            <div class="info-card orgao-card">
+                <div class="info-label">Órgão contratante</div>
+                <div class="info-value"><strong>${esc(c.orgao)}</strong>
+                    <span class="obs" style="margin-top:2px">${esc(c.instrumento)}</span></div>
+            </div>
             <div class="info-grid">
                 <div class="info-card">
                     <div class="info-label"><b>I</b> – Artista ou grupo artístico contratado</div>
@@ -422,7 +425,7 @@ function renderContrato(c, aberto) {
                         <strong>${esc(c.entidade)}</strong><br>
                         CNPJ ${esc(c.cnpj)}
                         <span class="obs">${esc(c.papel)}. ${esc(c.observacaoArtistas)}</span>
-                        ${c.linkArtistas ? `<a class="btn-export" style="margin-top:8px" href="${esc(c.linkArtistas)}" target="_blank" rel="noopener"><i class="material-icons">description</i> Ver artistas no formulário</a>` : ""}
+                        ${linkValido(c.linkArtistas) ? `<a class="btn-export" style="margin-top:8px" href="${esc(c.linkArtistas)}" target="_blank" rel="noopener"><i class="material-icons">description</i> Ver artistas no formulário</a>` : ""}
                     </div>
                 </div>
                 <div class="info-card destaque">
@@ -462,7 +465,7 @@ function renderContrato(c, aberto) {
 function renderLista() {
     const termo = document.getElementById("busca").value.trim().toLowerCase();
     const filtradas = CONTRATACOES.filter(c =>
-        !termo || [c.entidade, c.cnpj, c.instrumento, ...(c.outrosDocumentos || []).map(d => d.titulo)].join(" ").toLowerCase().includes(termo));
+        !termo || [c.orgao, c.entidade, c.cnpj, c.instrumento, ...(c.outrosDocumentos || []).map(d => d.titulo)].join(" ").toLowerCase().includes(termo));
 
     const lista = document.getElementById("lista-contratos");
     lista.innerHTML = filtradas.length
