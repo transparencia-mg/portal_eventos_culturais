@@ -54,21 +54,14 @@
             border-radius: 10px;
             padding: 18px 22px;
             margin-bottom: 20px;
-            display: flex; justify-content: space-between; align-items: center;
-            flex-wrap: wrap; gap: 12px;
             box-shadow: 0 3px 12px rgba(0,0,0,0.08);
         }
         .page-header h1 { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
         .page-header h1 .material-icons { font-size: 22px; }
         .page-header p { font-size: 12px; opacity: 0.85; margin-top: 4px; }
-        .table-badge {
-            background: rgba(255,255,255,0.14); color: white;
-            padding: 5px 12px; border-radius: 12px;
-            font-size: 12px; font-weight: 600; white-space: nowrap;
-        }
 
         /* ============================================================
-           5. CARDS DE MÉTRICAS
+           5. CARDS DE MÉTRICAS (totais de todas as contratações)
         ============================================================ */
         .metrics-grid {
             display: grid;
@@ -82,9 +75,7 @@
             border: 1px solid #e5e9ef;
             box-shadow: 0 3px 12px rgba(0,0,0,0.06);
             overflow: hidden;
-            transition: box-shadow 0.25s ease, transform 0.25s ease;
         }
-        .metric-card:hover { box-shadow: 0 8px 24px rgba(26,58,92,0.13); transform: translateY(-2px); }
         .metric-header {
             background: var(--header-blue); color: white;
             font-size: 13px; font-weight: 600;
@@ -94,118 +85,156 @@
         .metric-header .material-icons { font-size: 16px; opacity: 0.85; }
         .metric-body { padding: 12px 15px; }
         .metric-value { font-size: 20px; font-weight: 700; color: #171c21; }
-        .metric-value.small { font-size: 15px; }
         .metric-sublabel { font-size: 10px; color: #94a3b8; font-weight: 500; margin-top: 2px; }
-        .progress-mini { height: 6px; background: #e9eef3; border-radius: 3px; margin-top: 8px; overflow: hidden; }
-        .progress-mini div { height: 100%; width: 24%; background: var(--accent-red); border-radius: 3px; }
 
         /* ============================================================
-           6. BLOCO DA CONTRATAÇÃO
+           6. FILTRO
         ============================================================ */
-        .section-card {
+        .filter-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;
+        }
+        .filter-group { flex: 1; min-width: 220px; }
+        .filter-label { display: block; font-size: 13px; font-weight: 600; color: var(--primary-dark); margin-bottom: 6px; }
+        .modern-select {
+            border: 1.5px solid #dfe5ec;
+            border-radius: 8px;
+            padding: 0 12px;
+            font-family: inherit;
+            font-size: 13px;
+            height: 40px;
+            width: 100%;
+            background: #fff;
+            color: #1e293b;
+        }
+        .modern-select:focus { outline: none; border-color: var(--primary-dark); box-shadow: 0 0 0 2px rgba(26,58,92,0.1); }
+        .contador { font-size: 12px; font-weight: 600; color: var(--primary-dark); padding-bottom: 11px; white-space: nowrap; }
+
+        /* ============================================================
+           7. CARD DA CONTRATAÇÃO (expansível)
+        ============================================================ */
+        .contrato {
             background: white;
             border-radius: 10px;
             box-shadow: 0 3px 12px rgba(0,0,0,0.06);
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             overflow: hidden;
         }
-        .section-header {
-            background: var(--header-blue); color: white;
+        .contrato > summary {
+            list-style: none;
+            cursor: pointer;
+            background: var(--header-blue);
+            color: white;
             padding: 12px 16px;
-            font-size: 14px; font-weight: 600;
-            display: flex; align-items: center; gap: 8px;
+            display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
         }
-        .section-body { padding: 18px 20px; }
+        .contrato > summary::-webkit-details-marker { display: none; }
+        .contrato > summary:hover { background: #1a3a50; }
+        .contrato > summary:focus-visible { outline: 3px solid var(--accent-red); outline-offset: -3px; }
+        .contrato .seta { font-size: 20px; transition: transform 0.2s ease; }
+        .contrato[open] .seta { transform: rotate(90deg); }
+        .resumo-titulo { flex: 1; min-width: 200px; }
+        .resumo-titulo strong { display: block; font-size: 14px; font-weight: 600; }
+        .resumo-titulo span { font-size: 12px; opacity: 0.85; }
+        .resumo-valor { font-size: 14px; font-weight: 700; white-space: nowrap; }
+        .resumo-valor small { display: block; font-size: 10px; font-weight: 500; opacity: 0.8; text-align: right; }
 
-        .info-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 13px; }
+        .contrato-body { padding: 18px 20px 20px; }
+
+        .bloco-titulo {
+            font-size: 13px; font-weight: 700; color: var(--primary-dark);
+            display: flex; align-items: center; gap: 6px;
+            margin-bottom: 10px;
+        }
+        .bloco-titulo .material-icons { font-size: 16px; color: var(--accent-red); }
+
+        .info-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 13px; margin-bottom: 22px; }
         .info-card {
             background: #f8fafd;
             border-radius: 10px;
             padding: 13px 16px;
             border: 1px solid #e2e8f0;
-            border-left: 4px solid var(--accent-red);
+            border-left: 4px solid var(--primary-dark);
         }
-        .info-card.primary { border-left-color: var(--primary-dark); }
-        .info-label { font-size: 10px; text-transform: uppercase; color: #64748b; font-weight: 600; margin-bottom: 4px; }
-        .info-value { font-size: 13px; font-weight: 500; color: #1e293b; word-break: break-word; }
-        .info-value strong { font-size: 15px; font-weight: 700; color: var(--primary-dark); }
-
-        .botoes-acesso { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
-        .btn-pesquisa {
-            background: var(--header-blue);
-            border: none; padding: 0 16px;
-            font-weight: 600; font-size: 13px;
-            border-radius: 6px; color: white;
-            display: inline-flex; align-items: center; gap: 6px;
-            height: 36px; white-space: nowrap;
-            text-decoration: none; cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .btn-pesquisa:hover { background: linear-gradient(to right, var(--accent-red), #a32c32); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(185,60,66,0.2); color: white; }
-        .btn-secondary-custom {
-            background: white;
-            border: 2px solid var(--primary-darker);
-            color: var(--primary-darker);
-            padding: 0 16px;
-            font-weight: 600; font-size: 13px;
-            border-radius: 6px;
-            display: inline-flex; align-items: center; gap: 6px;
-            height: 36px; white-space: nowrap;
-            text-decoration: none; cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .btn-secondary-custom:hover { background-color: #132837; color: white; border-color: #132837; }
-        .btn-pesquisa:focus-visible, .btn-secondary-custom:focus-visible { outline: 3px solid var(--accent-red); outline-offset: 2px; }
+        .info-card.destaque { border-left-color: var(--accent-red); }
+        .info-label { font-size: 10px; text-transform: uppercase; color: #64748b; font-weight: 600; margin-bottom: 6px; }
+        .info-label b { color: var(--primary-dark); }
+        .info-value { font-size: 13px; font-weight: 500; color: #1e293b; line-height: 1.5; word-break: break-word; }
+        .info-value strong { font-size: 14px; font-weight: 700; color: var(--primary-dark); }
+        .info-value .valor-artistico { font-size: 16px; font-weight: 700; color: var(--accent-red); }
+        .info-value .obs { display: block; font-size: 12px; color: #64748b; margin-top: 4px; }
+        .barra { height: 6px; background: #e9eef3; border-radius: 3px; margin: 8px 0 4px; overflow: hidden; }
+        .barra div { height: 100%; background: var(--accent-red); border-radius: 3px; }
 
         /* ============================================================
-           7. TABELA DOS INCISOS
+           8. TABELA DE DOCUMENTOS
         ============================================================ */
-        .table-scroll { overflow-x: auto; }
+        .table-scroll { overflow-x: auto; border-radius: 8px; }
         .table { width: 100%; font-size: 12px; border-collapse: collapse; min-width: 640px; }
         .table th, .table td { border: 1px solid #d6dee6; }
         .table thead th {
             background-color: #54697b; color: white;
             font-weight: 600; font-size: 12px;
-            padding: 12px 10px;
+            padding: 11px 10px;
             text-transform: uppercase; text-align: left;
         }
         .table tbody tr { background-color: #ffffff; }
         .table tbody tr:hover { background-color: rgba(41,67,90,0.04); }
-        .table tbody td { padding: 10px; vertical-align: top; line-height: 1.5; color: #334155; }
-        .col-inciso { width: 60px; text-align: center !important; font-weight: 700; color: var(--primary-dark) !important; }
-        .col-exigencia { width: 26%; font-weight: 600; color: #1e293b !important; }
-        .col-onde { width: 150px; }
+        .table tbody td { padding: 10px; vertical-align: middle; line-height: 1.5; color: #334155; }
+        .table .col-inciso { width: 64px; text-align: center; font-weight: 700; color: var(--primary-dark); }
+        .table thead .col-inciso { color: white; }
+        .table .col-exigencia { width: 28%; font-weight: 600; color: #1e293b; }
+        .table .col-doc { width: 150px; text-align: center; }
 
-        .badge-status { padding: 3px 8px; border-radius: 20px; font-size: 10.5px; font-weight: 700; display: inline-block; letter-spacing: 0.2px; white-space: nowrap; }
-        .badge-formulario   { background: #d1ecf1; color: #0c5460; border: 1px solid #b0dde5; }
-        .badge-documentacao { background: #cce5ff; color: #004085; border: 1px solid #b8d4f5; }
-        .badge-pagina       { background: #dcf5e7; color: #0f6b3a; border: 1px solid #b2e6c8; }
-        .badge-na           { background: #e9ecef; color: #495057; border: 1px solid #ced4da; }
+        .btn-export {
+            border: 1px solid #d6dee6;
+            color: var(--primary-dark);
+            background: transparent;
+            padding: 0 12px;
+            border-radius: 6px;
+            font-size: 12px; font-weight: 600;
+            display: inline-flex; align-items: center; gap: 4px;
+            height: 30px;
+            text-decoration: none; white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+        .btn-export:hover { background: var(--primary-dark); border-color: var(--primary-dark); color: white; }
+        .btn-export:focus-visible { outline: 3px solid var(--accent-red); outline-offset: 2px; }
+        .badge-status { padding: 3px 8px; border-radius: 20px; font-size: 10.5px; font-weight: 700; display: inline-block; white-space: nowrap; }
+        .badge-na { background: #e9ecef; color: #495057; border: 1px solid #ced4da; }
 
-        .legenda { font-size: 11px; color: #64748b; margin-top: 10px; }
+        .vazio {
+            background: white; border-radius: 10px; padding: 30px; text-align: center;
+            color: #64748b; font-size: 13px; box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+        }
+        .vazio .material-icons { font-size: 34px; display: block; margin-bottom: 6px; }
 
         /* ============================================================
-           8. RESPONSIVIDADE
+           9. RESPONSIVIDADE
         ============================================================ */
         @media (max-width: 992px) {
             .dashboard-container { padding: 0 15px; max-width: 100%; }
             .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+            .info-grid { grid-template-columns: 1fr 1fr; }
+            .info-grid .info-card:first-child { grid-column: 1 / -1; }
         }
         @media (max-width: 768px) {
             .dashboard-container { padding: 0 8px; }
             .info-grid { grid-template-columns: 1fr; }
             .metric-value { font-size: 16px; }
-            .botoes-acesso { flex-direction: column; }
-            .btn-pesquisa, .btn-secondary-custom { width: 100%; justify-content: center; }
-            .section-body { padding: 14px; }
+            .contrato-body { padding: 14px; }
             .table thead th, .table tbody td { padding: 6px 5px; font-size: 11px; }
+            .contador { padding-bottom: 0; }
         }
         @media (max-width: 480px) {
             .metrics-grid { grid-template-columns: 1fr; }
         }
         @media (prefers-reduced-motion: reduce) {
-            .metric-card, .btn-pesquisa, .btn-secondary-custom { transition: none; }
-            .metric-card:hover, .btn-pesquisa:hover { transform: none; }
+            .contrato .seta, .btn-export { transition: none; }
         }
     </style>
 </head>
@@ -214,186 +243,242 @@
 <div class="main-container">
     <div class="dashboard-container">
 
-        <!-- Data de atualização: altere sempre que atualizar a página -->
         <div class="data-atualizacao-box">
             <i class="material-icons">event</i>
-            Atualizado em: <span style="margin-left:4px;">28/10/2026</span>
+            Atualizado em: <span id="data-atualizacao" style="margin-left:4px;"></span>
         </div>
 
-        <!-- Cabeçalho -->
         <div class="page-header">
-            <div>
-                <h1><i class="material-icons">theater_comedy</i>Despesa com Eventos Culturais</h1>
-                <p>Contratações de artistas e grupos artísticos, conforme a Lei Estadual nº 26.040/2026</p>
-            </div>
-            <span class="table-badge">1 contratação</span>
+            <h1><i class="material-icons">theater_comedy</i>Despesa com Eventos Culturais</h1>
+            <p>Contratações de artistas e grupos artísticos, conforme a Lei Estadual nº 26.040/2026</p>
         </div>
 
-        <!-- Cards de métricas -->
-        <div class="metrics-grid">
-            <div class="metric-card">
-                <div class="metric-header">Patrocínio concedido <i class="material-icons">account_balance</i></div>
-                <div class="metric-body">
-                    <div class="metric-value">R$ 250.000,00</div>
-                    <div class="metric-sublabel">Valor total do patrocínio CODEMGE</div>
-                </div>
+        <div class="metrics-grid" id="metricas"></div>
+
+        <div class="filter-container">
+            <div class="filter-group">
+                <label class="filter-label" for="busca">Pesquisar contratação</label>
+                <input id="busca" class="modern-select" type="search" placeholder="Entidade, CNPJ, nº do instrumento ou documento">
             </div>
-            <div class="metric-card">
-                <div class="metric-header">Contratações artísticas <i class="material-icons">mic</i></div>
-                <div class="metric-body">
-                    <div class="metric-value">R$ 60.000,00</div>
-                    <div class="progress-mini" role="img" aria-label="24% do patrocínio"><div></div></div>
-                    <div class="metric-sublabel">24% do valor do patrocínio</div>
-                </div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-header">Instrumento jurídico <i class="material-icons">gavel</i></div>
-                <div class="metric-body">
-                    <div class="metric-value small">Contrato nº 12.103</div>
-                    <div class="metric-sublabel">Contrato de Patrocínio</div>
-                </div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-header">Fonte dos recursos <i class="material-icons">payments</i></div>
-                <div class="metric-body">
-                    <div class="metric-value small">Patrocínio CODEMGE</div>
-                    <div class="metric-sublabel">Recursos de patrocínio</div>
-                </div>
-            </div>
+            <span class="contador" id="contador"></span>
         </div>
 
-        <!-- ============================================================
-             BLOCO DE UMA CONTRATAÇÃO
-             Para incluir outra contratação, copie desde aqui até
-             "FIM DO BLOCO", cole logo abaixo e altere os dados.
-             ============================================================ -->
-        <div class="section-card">
-            <div class="section-header">
-                <i class="material-icons">handshake</i> Contrato de Patrocínio nº 12.103
-            </div>
-            <div class="section-body">
-
-                <div class="info-grid">
-                    <div class="info-card primary">
-                        <div class="info-label">Entidade patrocinada e responsável pela execução do projeto</div>
-                        <div class="info-value">
-                            <strong>Instituto Antônio Ernesto de Salvo – INAES</strong><br>
-                            CNPJ 09.381.295/0001-68
-                        </div>
-                    </div>
-                    <div class="info-card">
-                        <div class="info-label">Valor das contratações artísticas</div>
-                        <div class="info-value"><strong style="color:var(--accent-red)">R$ 60.000,00</strong><br>de R$ 250.000,00 patrocinados</div>
-                    </div>
-                </div>
-
-                <div class="botoes-acesso">
-                    <!-- SUBSTITUA href="#" pelo link da documentação -->
-                    <a class="btn-pesquisa" href="#" target="_blank" rel="noopener">
-                        <i class="material-icons">folder_open</i> Acessar documentação
-                    </a>
-                    <!-- SUBSTITUA href="#" pelo link do formulário -->
-                    <a class="btn-secondary-custom" href="#" target="_blank" rel="noopener">
-                        <i class="material-icons">description</i> Abrir formulário
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="section-card">
-            <div class="section-header">
-                <i class="material-icons">checklist</i> Informações exigidas pela Lei Estadual nº 26.040/2026
-            </div>
-            <div class="section-body">
-                <div class="table-scroll">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th class="col-inciso" style="color:white !important">Inciso</th>
-                                <th>Exigência</th>
-                                <th>Informação</th>
-                                <th>Onde consultar</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="col-inciso">I</td>
-                                <td class="col-exigencia">Artista ou grupo artístico contratado</td>
-                                <td>Instituto Antônio Ernesto de Salvo – INAES, CNPJ nº 09.381.295/0001-68, na condição de entidade patrocinada e responsável pela execução do projeto. Os artistas e grupos artísticos contratados constam do formulário.</td>
-                                <td class="col-onde"><span class="badge-status badge-formulario">Formulário</span></td>
-                            </tr>
-                            <tr>
-                                <td class="col-inciso">II</td>
-                                <td class="col-exigencia">Valor total da contratação</td>
-                                <td>Patrocínio concedido pela CODEMGE: R$ 250.000,00 (duzentos e cinquenta mil reais).<br>Destinado às contratações artísticas: R$ 60.000,00 (sessenta mil reais).</td>
-                                <td class="col-onde"><span class="badge-status badge-pagina">Nesta página</span></td>
-                            </tr>
-                            <tr>
-                                <td class="col-inciso">III</td>
-                                <td class="col-exigencia">Fonte dos recursos utilizados</td>
-                                <td>Recursos provenientes de patrocínio concedido pela CODEMGE.</td>
-                                <td class="col-onde"><span class="badge-status badge-pagina">Nesta página</span></td>
-                            </tr>
-                            <tr>
-                                <td class="col-inciso">IV</td>
-                                <td class="col-exigencia">Instrumento jurídico da contratação</td>
-                                <td>Contrato de Patrocínio nº 12.103.</td>
-                                <td class="col-onde"><span class="badge-status badge-documentacao">https://nuvem.cge.mg.gov.br/index.php/s/k6CocJFDcnKsjkW</span></td>
-                            </tr>
-                            <tr>
-                                <td class="col-inciso">V</td>
-                                <td class="col-exigencia">Nota de empenho</td>
-                                <td>Não se aplica.</td>
-                                <td class="col-onde"><span class="badge-status badge-na">Não se aplica</span></td>
-                            </tr>
-                            <tr>
-                                <td class="col-inciso">VI</td>
-                                <td class="col-exigencia">Justificativa de preço</td>
-                                <td>As justificativas de preço e os documentos comprobatórios, incluindo pesquisas de mercado, constam do formulário.</td>
-                                <td class="col-onde"><span class="badge-status badge-formulario">https://nuvem.cge.mg.gov.br/index.php/s/TpwdfSY4RX9pWMs</span></td>
-                            </tr>
-                            <tr>
-                                <td class="col-inciso">VII</td>
-                                <td class="col-exigencia">Regularidade fiscal e previdenciária</td>
-                                <td>Documentação comprobatória disponível no link de acesso.</td>
-                                <td class="col-onde"><span class="badge-status badge-documentacao">https://nuvem.cge.mg.gov.br/index.php/s/tCfpiFNMdoCWSE9</span></td>
-                            </tr>
-                            <tr>
-                                <td class="col-inciso">VIII</td>
-                                <td class="col-exigencia">Ato de dispensa ou inexigibilidade de licitação</td>
-                                <td>Não se aplica.</td>
-                                <td class="col-onde"><span class="badge-status badge-na">Não se aplica</span></td>
-                            </tr>
-                            <tr>
-                                <td class="col-inciso">IX</td>
-                                <td class="col-exigencia">Planilha sintética dos itens do valor total</td>
-                                <td>A composição dos custos das contratações artísticas está detalhada no formulário.</td>
-                                <td class="col-onde"><span class="badge-status badge-formulario">https://nuvem.cge.mg.gov.br/index.php/s/YmNbADGYWy7BHFT</span></td>
-                            </tr>
-                            <tr>
-                                <td class="col-inciso">X</td>
-                                <td class="col-exigencia">Contrapartida cultural ou social</td>
-                                <td>As contrapartidas previstas para o projeto estão descritas no Plano de Trabalho.</td>
-                                <td class="col-onde"><span class="badge-status badge-documentacao">https://nuvem.cge.mg.gov.br/index.php/s/bnWYNCjr3xS4Tc8</span></td>
-                            </tr>
-                            <tr>
-                                <td class="col-inciso">XI</td>
-                                <td class="col-exigencia">Participação de artistas, grupos e manifestações culturais locais, regionais ou sediados no Estado (art. 5º, caput)</td>
-                                <td>As informações correspondentes estão detalhadas no formulário.</td>
-                                <td class="col-onde"><span class="badge-status badge-formulario">https://nuvem.cge.mg.gov.br/index.php/s/bnWYNCjr3xS4Tc8</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <p class="legenda">
-                    <strong>Documentação</strong> e <strong>Formulário</strong> correspondem aos botões de acesso do bloco acima.
-                </p>
-            </div>
-        </div>
-        <!-- ===================== FIM DO BLOCO ===================== -->
+        <div id="lista-contratos"></div>
 
     </div>
 </div>
+
+<script>
+/* =====================================================================
+   DADOS DA PÁGINA — é só editar esta parte.
+
+   ATUALIZADO_EM: data mostrada no topo.
+
+   Para incluir uma nova contratação, copie o bloco { ... } de um
+   contrato, cole depois da última vírgula da lista e altere os dados.
+   Valores em número, sem "R$" e sem ponto de milhar (ex.: 60000).
+
+   Em "documentos" (incisos IV a XI), cada item tem:
+     link: endereço do documento, ou null quando "Não se aplica"
+
+   Em "outrosDocumentos" (documentos complementares), cada item tem:
+     titulo, descricao e link. Para incluir um documento, copie uma
+     linha { ... } e altere. Se não houver nenhum, deixe a lista vazia: []
+   ===================================================================== */
+const ATUALIZADO_EM = "28/10/2026";
+
+const CONTRATACOES = [
+    {
+        instrumento:        "Contrato de Patrocínio nº 12.103",
+        entidade:           "Instituto Antônio Ernesto de Salvo – INAES",
+        cnpj:               "09.381.295/0001-68",
+        papel:              "Entidade patrocinada e responsável pela execução do projeto",
+        observacaoArtistas: "Os artistas e grupos artísticos contratados constam do formulário.",
+        linkArtistas:       "#",          // SUBSTITUA pelo link do formulário
+        valorPatrocinio:    250000,
+        valorArtistico:     60000,
+        fonte:              "Recursos provenientes de patrocínio concedido pela CODEMGE.",
+        documentos: [
+            { inciso: "IV",   exigencia: "Instrumento jurídico da contratação",
+              info: "Contrato de Patrocínio nº 12.103.",
+              link: "#" },                // SUBSTITUA
+            { inciso: "V",    exigencia: "Nota de empenho",
+              info: "Não se aplica.",
+              link: null },
+            { inciso: "VI",   exigencia: "Justificativa de preço",
+              info: "Justificativas de preço e documentos comprobatórios, incluindo pesquisas de mercado, constantes do formulário.",
+              link: "#" },                // SUBSTITUA
+            { inciso: "VII",  exigencia: "Regularidade fiscal e previdenciária",
+              info: "Documentação comprobatória de regularidade.",
+              link: "#" },                // SUBSTITUA
+            { inciso: "VIII", exigencia: "Ato de dispensa ou inexigibilidade de licitação",
+              info: "Não se aplica.",
+              link: null },
+            { inciso: "IX",   exigencia: "Planilha sintética dos itens do valor total",
+              info: "Composição dos custos das contratações artísticas, detalhada no formulário.",
+              link: "#" },                // SUBSTITUA
+            { inciso: "X",    exigencia: "Contrapartida cultural ou social",
+              info: "Contrapartidas previstas no Plano de Trabalho do projeto.",
+              link: "#" },                // SUBSTITUA
+            { inciso: "XI",   exigencia: "Participação de artistas, grupos e manifestações culturais locais, regionais ou sediados no Estado (art. 5º, caput)",
+              info: "Informações detalhadas no formulário.",
+              link: "#" }                 // SUBSTITUA
+        ],
+        outrosDocumentos: [
+            { titulo: "Formulário das contratações artísticas",
+              descricao: "Relação de artistas, composição de custos e justificativas de preço.",
+              link: "#" },                // SUBSTITUA
+            { titulo: "Plano de Trabalho",
+              descricao: "Plano de Trabalho do projeto, com as contrapartidas previstas.",
+              link: "#" }                 // SUBSTITUA
+        ]
+    }
+    /* , { ...próxima contratação... } */
+];
+
+/* =====================================================================
+   A PARTIR DAQUI NÃO É PRECISO ALTERAR
+   ===================================================================== */
+const moeda = v => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+const pct = (a, b) => b > 0 ? Math.round((a / b) * 100) : 0;
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+
+function renderMetricas() {
+    const totalPat = CONTRATACOES.reduce((s, c) => s + c.valorPatrocinio, 0);
+    const totalArt = CONTRATACOES.reduce((s, c) => s + c.valorArtistico, 0);
+    const n = CONTRATACOES.length;
+    const cards = [
+        ["Contratações", "assignment", n, n === 1 ? "instrumento publicado" : "instrumentos publicados"],
+        ["Total de patrocínios", "account_balance", moeda(totalPat), "Soma dos patrocínios concedidos"],
+        ["Total artístico", "mic", moeda(totalArt), "Destinado às contratações artísticas"],
+        ["Participação artística", "pie_chart", pct(totalArt, totalPat) + "%", "do valor total dos patrocínios"]
+    ];
+    document.getElementById("metricas").innerHTML = cards.map(([t, i, v, s]) => `
+        <div class="metric-card">
+            <div class="metric-header">${t} <i class="material-icons">${i}</i></div>
+            <div class="metric-body">
+                <div class="metric-value">${v}</div>
+                <div class="metric-sublabel">${s}</div>
+            </div>
+        </div>`).join("");
+}
+
+function botaoDoc(link) {
+    if (!link) return `<span class="badge-status badge-na">Não se aplica</span>`;
+    return `<a class="btn-export" href="${esc(link)}" target="_blank" rel="noopener"><i class="material-icons">open_in_new</i> Acessar</a>`;
+}
+
+function renderOutros(lista) {
+    if (!lista || !lista.length) return "";
+    const linhas = lista.map(d => `
+        <tr>
+            <td class="col-exigencia">${esc(d.titulo)}</td>
+            <td>${esc(d.descricao)}</td>
+            <td class="col-doc">${botaoDoc(d.link)}</td>
+        </tr>`).join("");
+    return `
+            <div class="bloco-titulo" style="margin-top:22px"><i class="material-icons">attach_file</i> Outros documentos</div>
+            <div class="table-scroll">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Documento</th>
+                            <th>Descrição</th>
+                            <th class="col-doc">Documentação</th>
+                        </tr>
+                    </thead>
+                    <tbody>${linhas}</tbody>
+                </table>
+            </div>`;
+}
+
+function renderContrato(c, aberto) {
+    const p = pct(c.valorArtistico, c.valorPatrocinio);
+    const linhas = c.documentos.map(d => `
+        <tr>
+            <td class="col-inciso">${esc(d.inciso)}</td>
+            <td class="col-exigencia">${esc(d.exigencia)}</td>
+            <td>${esc(d.info)}</td>
+            <td class="col-doc">${botaoDoc(d.link)}</td>
+        </tr>`).join("");
+
+    return `
+    <details class="contrato" ${aberto ? "open" : ""}>
+        <summary>
+            <i class="material-icons seta">chevron_right</i>
+            <div class="resumo-titulo">
+                <strong>${esc(c.entidade)}</strong>
+                <span>${esc(c.instrumento)} · CNPJ ${esc(c.cnpj)}</span>
+            </div>
+            <div class="resumo-valor">${moeda(c.valorArtistico)}<small>contratações artísticas</small></div>
+        </summary>
+
+        <div class="contrato-body">
+            <div class="bloco-titulo"><i class="material-icons">info</i> Dados da contratação</div>
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-label"><b>I</b> – Artista ou grupo artístico contratado</div>
+                    <div class="info-value">
+                        <strong>${esc(c.entidade)}</strong><br>
+                        CNPJ ${esc(c.cnpj)}
+                        <span class="obs">${esc(c.papel)}. ${esc(c.observacaoArtistas)}</span>
+                        ${c.linkArtistas ? `<a class="btn-export" style="margin-top:8px" href="${esc(c.linkArtistas)}" target="_blank" rel="noopener"><i class="material-icons">description</i> Ver artistas no formulário</a>` : ""}
+                    </div>
+                </div>
+                <div class="info-card destaque">
+                    <div class="info-label"><b>II</b> – Valor total da contratação</div>
+                    <div class="info-value">
+                        <span class="valor-artistico">${moeda(c.valorArtistico)}</span>
+                        <span class="obs" style="margin-top:0">destinados às contratações artísticas</span>
+                        <div class="barra" role="img" aria-label="${p}% do patrocínio"><div style="width:${p}%"></div></div>
+                        <span class="obs">${p}% do patrocínio de ${moeda(c.valorPatrocinio)}</span>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label"><b>III</b> – Fonte dos recursos</div>
+                    <div class="info-value">${esc(c.fonte)}</div>
+                </div>
+            </div>
+
+            <div class="bloco-titulo"><i class="material-icons">folder_open</i> Documentos da contratação</div>
+            <div class="table-scroll">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-inciso">Inciso</th>
+                            <th>Exigência</th>
+                            <th>Informação</th>
+                            <th class="col-doc">Documentação</th>
+                        </tr>
+                    </thead>
+                    <tbody>${linhas}</tbody>
+                </table>
+            </div>
+            ${renderOutros(c.outrosDocumentos)}
+        </div>
+    </details>`;
+}
+
+function renderLista() {
+    const termo = document.getElementById("busca").value.trim().toLowerCase();
+    const filtradas = CONTRATACOES.filter(c =>
+        !termo || [c.entidade, c.cnpj, c.instrumento, ...(c.outrosDocumentos || []).map(d => d.titulo)].join(" ").toLowerCase().includes(termo));
+
+    const lista = document.getElementById("lista-contratos");
+    lista.innerHTML = filtradas.length
+        ? filtradas.map((c, i) => renderContrato(c, i === 0 || termo !== "")).join("")
+        : `<div class="vazio"><i class="material-icons">search_off</i>Nenhuma contratação encontrada para "${esc(termo)}". Tente outro nome, CNPJ ou número.</div>`;
+
+    const n = filtradas.length;
+    document.getElementById("contador").textContent =
+        `${n} ${n === 1 ? "contratação" : "contratações"}`;
+}
+
+document.getElementById("data-atualizacao").textContent = ATUALIZADO_EM;
+document.getElementById("busca").addEventListener("input", renderLista);
+renderMetricas();
+renderLista();
+</script>
 
 </body>
 </html>
