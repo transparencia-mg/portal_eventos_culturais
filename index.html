@@ -25,7 +25,10 @@
            2. BASE
         ============================================================ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { width: 100%; overflow-x: hidden; }
+        html, body { width: 100%; overflow-x: hidden; height: auto; min-height: auto; }
+        /* Dentro do iframe a página não tem rolagem própria: o portal ajusta a
+           altura do iframe ao conteúdo e só a rolagem do portal fica visível. */
+        html.em-iframe, html.em-iframe body { overflow-y: hidden; }
         body {
             font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--background-light);
@@ -477,10 +480,33 @@ function renderLista() {
         `${n} ${n === 1 ? "contratação" : "contratações"}`;
 }
 
+/* ---------- Ajuste de altura do iframe (mesmo padrão do portal) ---------- */
+const DENTRO_IFRAME = window.parent && window.parent !== window;
+if (DENTRO_IFRAME) document.documentElement.classList.add("em-iframe");
+
+let ultimaAltura = 0;
+function iframeUpdateHeight() {
+    if (!DENTRO_IFRAME) return;
+    clearTimeout(window.__alturaTimer);
+    window.__alturaTimer = setTimeout(function () {
+        const h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight) + 20;
+        if (Math.abs(h - ultimaAltura) < 2) return;
+        ultimaAltura = h;
+        try { window.parent.postMessage({ iframeHeight: h, height: h, type: "resize" }, "*"); } catch (e) {}
+    }, 150);
+}
+
 document.getElementById("data-atualizacao").textContent = ATUALIZADO_EM;
-document.getElementById("busca").addEventListener("input", renderLista);
+document.getElementById("busca").addEventListener("input", () => { renderLista(); iframeUpdateHeight(); });
+// Abrir ou fechar um contrato muda a altura da página
+document.getElementById("lista-contratos").addEventListener("toggle", iframeUpdateHeight, true);
+window.addEventListener("load", iframeUpdateHeight);
+window.addEventListener("resize", iframeUpdateHeight);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(iframeUpdateHeight);
+if (window.ResizeObserver) new ResizeObserver(iframeUpdateHeight).observe(document.body);
 renderMetricas();
 renderLista();
+iframeUpdateHeight();
 </script>
 
 </body>
