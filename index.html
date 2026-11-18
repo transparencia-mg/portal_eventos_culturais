@@ -518,7 +518,7 @@ function renderLista() {
 
     const lista = document.getElementById("lista-contratos");
     lista.innerHTML = filtradas.length
-        ? filtradas.map((c, i) => renderContrato(c, i === 0 || termo !== "")).join("")
+        ? filtradas.map((c, i) => renderContrato(c, termo !== "")).join("")
         : `<div class="vazio"><i class="material-icons">search_off</i>Nenhuma contratação encontrada para "${esc(termo)}". Tente outro nome, CNPJ ou número.</div>`;
 
     const n = filtradas.length;
